@@ -31,7 +31,7 @@ class Enemy < Character
   def initialize(name:, jp_name:, hp:, strength:, element: 'nomal', exp: 0, use_skills: [{ skill_name: 'atk', use_rate: 0..100 }])
     @use_skills = use_skills
     super(name: name, jp_name: jp_name, hp: hp, strength: strength, element: element, exp: exp)
-    Enemy_list.enemy_add(self)
+    EnemyList.enemy_add(self)
   end
 
   def enemy_act(other, use: rand(100))
@@ -43,7 +43,7 @@ class Enemy < Character
   end
 end
 
-class Enemy_list
+class EnemyList
   @@enemy_list = {}
 
   def self.enemy_add(enemy)
@@ -53,20 +53,4 @@ class Enemy_list
   def self.enemy_list
     @@enemy_list
   end
-end
-
-Enemy.new(name: 'fire_spirit', jp_name: 'ファイアスピリット', hp: 10, strength: 1, exp: 10, use_skills: [{ skill_name: 'fire_breath', use_rate: 0...50 }])
-Enemy.new(name: 'ice_spirit', jp_name: 'アイススピリット', hp: 10, strength: 1, exp: 10, use_skills: [{ skill_name: 'fire_breath', use_rate: 0...50 }])
-Enemy.new(name: 'bear', jp_name: '熊', hp: 10, strength: 1, exp: 10)
-
-module EncountList
-  @@enemys = Enemy_list.enemy_list
-  Forest_encount_list = [
-    { enemy_instance: @@enemys[:fire_spirit], encount_rate: 0...45 },
-    { enemy_instance: @@enemys[:ice_spirit], encount_rate: 45...90 },
-    { enemy_instance: @@enemys[:bear], encount_rate: 90..100 }
-  ].freeze
-  Encount_list = {
-    forest: Forest_encount_list
-  }.freeze
 end

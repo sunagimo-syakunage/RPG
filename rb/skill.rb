@@ -6,17 +6,12 @@ class Skill
   # ratio 攻撃倍率
   # element スキルの属性
 
-  Skill_list = [
-    { skill_type: 'damege', name: 'atk', jp_name: '攻撃', ratio: 1.0, element: 'nomal' },
-    { skill_type: 'damege', name: 'fire_breath', jp_name: 'ファイアブレス', ratio: 1.2, element: 'fire' },
-    { skill_type: 'damege', name: 'blizzard', jp_name: 'ブリザード', ratio: 1.2, element: 'ice' }
-  ].freeze
-
   def self.use_skill(attacker, defender, skill_name)
-    select_skill = Skill_list.find { |abc| abc[:name] == skill_name }
+    select_skill = BattleData::SKILL_LIST.find { |abc| abc[:name] == skill_name }
     case select_skill[:skill_type]
     when 'damege'
-      BattleText.damege_skill_text(attacker, defender, select_skill, damege_skill(attacker, defender, select_skill))
+      # BattleText.damege_skill_text(attacker, defender, select_skill, damege_skill(attacker, defender, select_skill))
+      damege_skill(attacker, defender, select_skill)
     when 'heal'
       # 回復スキル用の処理
     end
@@ -28,20 +23,15 @@ class Skill
     # else
     #   Damege.calc(attacker, defender, select_skill[:raito], select_skill[:element])
     # end
-    Damege.calc(attacker, defender, select_skill[:ratio], select_skill[:element])
+    { damege: Damege.calc(attacker, defender, select_skill[:ratio], select_skill[:element]), select_skill: select_skill }
   end
-
 end
 
 # ダメージ計算とか
 class Damege
-  # 弱点表
-  # forest はまだ作ってないけどこんな感じに入れればできる
-  Element_list = [{ use: 'fire', weak: %w[ice forest], resist: ['fire'] },
-                  { use: 'ice', weak: ['fire'], resist: ['ice'] }].freeze
   def self.calc(attacker, defender, ratio = 1.0, use = 'nomal')
     damege = attacker.strength * ratio
-    use_element = Element_list.find { |abc| abc[:use] == use }
+    use_element = BattleData::ELEMENT_LIST.find { |abc| abc[:use] == use }
     if use_element && use_element[:weak].include?(defender.element)
       damege *= 1.3
     elsif use_element && use_element[:resist].include?(defender.element)

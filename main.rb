@@ -13,6 +13,12 @@ require_relative './rb/battle.rb'
 require_relative './rb/texts.rb'
 require_relative './rb/ui.rb'
 require_relative './rb/scene.rb'
+require_relative './rb/data.rb'
 WindowSetting.window_size_preset
+@testkun = Player.new(name: 'player', jp_name: 'テスト君1号', hp: 20, strength: 6, element: 'nomal')
+@testenemy = Enemy.new(name: 'red', jp_name: 'テストエネミー', hp: 20, strength: 11, exp: 10)
 Window.loop do
+  TextField.run
+  CharacterView.player_view
+  Battle.battle(@testkun, 'forest')
 end
